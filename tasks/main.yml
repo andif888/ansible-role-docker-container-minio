@@ -1,0 +1,30 @@
+---
+# @tag docker-container-prereq-all:description: Ensure all pre-requisites are installed
+# @tag docker-container-prereq-minio:description: Ensure all pre-requisites for minio are installed
+- ansible.builtin.import_tasks: "{{ role_path }}/tasks/prereq.yml"
+  tags:
+    - docker-container-prereq-all
+    - docker-container-prereq-minio
+
+# @tag docker-container-setup-all:description: Run setup task for all containers.
+# @tag docker-container-setup-minio:description: Run setup task for minio.
+- ansible.builtin.import_tasks: "{{ role_path }}/tasks/setup.yml"
+  tags:
+    - docker-container-setup-all
+    - docker-container-setup-minio
+
+# @tag docker-container-remove-all:description: Remove all containers.
+# @tag docker-container-remove-minio:description: Remove minio.
+- ansible.builtin.import_tasks: "{{ role_path }}/tasks/remove.yml"
+  tags:
+    - never
+    - docker-container-remove-all
+    - docker-container-remove-minio
+    - docker-container-purge-minio
+
+# @tag docker-container-purge-all:description: Remove all containers and delete volume mounts.
+# @tag docker-container-purge-minio:description: Remove minio and delete volume mounts.
+- ansible.builtin.import_tasks: "{{ role_path }}/tasks/purge.yml"
+  tags:
+    - never
+    - docker-container-purge-minio
