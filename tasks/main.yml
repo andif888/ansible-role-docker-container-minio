@@ -6,12 +6,35 @@
     - docker-container-prereq-all
     - docker-container-prereq-minio
 
+# @tag docker-container-restore-all:description: Run restic restore for all restic enabled containers.
+# @tag docker-container-restore-minio:description: Run restic restore for minio if restic is enabled.
+- ansible.builtin.import_tasks: "{{ role_path }}/tasks/restore.yml"
+  tags:
+    - never
+    - docker-container-restore-all
+    - docker-container-restore-minio
+  when:
+    - docker_container_minio_restic_enable
+
 # @tag docker-container-setup-all:description: Run setup task for all containers.
 # @tag docker-container-setup-minio:description: Run setup task for minio.
 - ansible.builtin.import_tasks: "{{ role_path }}/tasks/setup.yml"
   tags:
     - docker-container-setup-all
     - docker-container-setup-minio
+    - docker-container-restore-all
+    - docker-container-restore-minio
+
+# @tag docker-container-backup-init-all:description: Run init backup task for all container.
+# @tag docker-container-backup-init-minio:description: Run init backup task for minio if restic is enabled.
+- ansible.builtin.import_tasks: "{{ role_path }}/tasks/backup_init.yml"
+  tags:
+    - docker-container-setup-all
+    - docker-container-setup-minio
+    - docker-container-backup-init-all
+    - docker-container-backup-init-minio
+  when:
+    - docker_container_minio_restic_enable
 
 # @tag docker-container-remove-all:description: Remove all containers.
 # @tag docker-container-remove-minio:description: Remove minio.
@@ -28,3 +51,25 @@
   tags:
     - never
     - docker-container-purge-minio
+  when:
+    - docker_container_minio_restic_enable
+
+# @tag docker-container-backup-all:description: Backup all containers' volume mounts.
+# @tag docker-container-backup-minio:description: Backup minio volume mounts.
+- ansible.builtin.import_tasks: "{{ role_path }}/tasks/backup.yml"
+  tags:
+    - never
+    - docker-container-backup-all
+    - docker-container-backup-minio
+  when:
+    - docker_container_minio_restic_enable
+
+# @tag docker-container-backup-list-all:description: List all containers' backups.
+# @tag docker-container-backup-list-minio:description: List minio backups.
+- ansible.builtin.import_tasks: "{{ role_path }}/tasks/backup_list.yml"
+  tags:
+    - never
+    - docker-container-backup-list-all
+    - docker-container-backup-list-minio
+  when:
+    - docker_container_minio_restic_enable

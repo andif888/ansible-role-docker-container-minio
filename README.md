@@ -12,6 +12,15 @@ Role to run Minio in a docker container
   - [docker_container_minio_name](#docker_container_minio_name)
   - [docker_container_minio_networks](#docker_container_minio_networks)
   - [docker_container_minio_ports](#docker_container_minio_ports)
+  - [docker_container_minio_restic_enable](#docker_container_minio_restic_enable)
+  - [docker_container_minio_restic_retention](#docker_container_minio_restic_retention)
+  - [docker_container_minio_restic_s3_bucket_name](#docker_container_minio_restic_s3_bucket_name)
+  - [docker_container_minio_restic_s3_endpoint](#docker_container_minio_restic_s3_endpoint)
+  - [docker_container_minio_restic_s3_repo](#docker_container_minio_restic_s3_repo)
+  - [docker_container_minio_restic_s3_repo_access_key](#docker_container_minio_restic_s3_repo_access_key)
+  - [docker_container_minio_restic_s3_repo_password](#docker_container_minio_restic_s3_repo_password)
+  - [docker_container_minio_restic_s3_repo_secret_key](#docker_container_minio_restic_s3_repo_secret_key)
+  - [docker_container_minio_restic_tag](#docker_container_minio_restic_tag)
   - [docker_container_minio_volume_dir](#docker_container_minio_volume_dir)
   - [docker_container_minio_volumes](#docker_container_minio_volumes)
   - [docker_image_minio_name](#docker_image_minio_name)
@@ -109,6 +118,115 @@ docker_container_minio_ports:
   - 9001:9001
 ```
 
+### docker_container_minio_restic_enable
+
+Enable restic backup for the container's mounted volumes.
+
+#### Default value
+
+```YAML
+docker_container_minio_restic_enable: false
+```
+
+### docker_container_minio_restic_retention
+
+Retention settions for `restic forget` after the `restic backup`.
+
+#### Default value
+
+```YAML
+docker_container_minio_restic_retention:
+  keep_last: 1
+  keep_daily: 7
+  keep_weekly: 4
+```
+
+### docker_container_minio_restic_s3_bucket_name
+
+Minio S3 bucket name for restic backup storage.
+
+#### Default value
+
+```YAML
+docker_container_minio_restic_s3_bucket_name: restic-{{ docker_container_minio_name
+  }}
+```
+
+### docker_container_minio_restic_s3_endpoint
+
+Minio S3 endpoint for restic backup storage.
+
+Example:
+
+```yaml
+
+docker_container__base__restic_s3_endpoint: "https://minio-backup.{{ dns_domain }}"
+
+docker_container_minio_restic_s3_endpoint: "{{ docker_container__base__restic_s3_endpoint }}"
+
+```
+
+#### Default value
+
+```YAML
+docker_container_minio_restic_s3_endpoint: '{{ docker_container__base__restic_s3_endpoint
+  }}'
+```
+
+### docker_container_minio_restic_s3_repo
+
+Minio S3 repo URL for restic backup storage.
+
+#### Default value
+
+```YAML
+docker_container_minio_restic_s3_repo: s3:{{ docker_container_minio_restic_s3_endpoint
+  }}/{{ docker_container_minio_restic_s3_bucket_name }}
+```
+
+### docker_container_minio_restic_s3_repo_access_key
+
+Minio S3 repo access key for restic backup storage.
+
+#### Default value
+
+```YAML
+docker_container_minio_restic_s3_repo_access_key: '{{ docker_container__base__restic_s3_repo_access_key
+  }}'
+```
+
+### docker_container_minio_restic_s3_repo_password
+
+Minio S3 repo password for restic backup storage.
+
+#### Default value
+
+```YAML
+docker_container_minio_restic_s3_repo_password: '{{ docker_container__base__restic_s3_repo_password
+  }}'
+```
+
+### docker_container_minio_restic_s3_repo_secret_key
+
+Minio S3 repo secret key for restic backup storage.
+
+#### Default value
+
+```YAML
+docker_container_minio_restic_s3_repo_secret_key: '{{ docker_container__base__restic_s3_repo_secret_key
+  }}'
+```
+
+### docker_container_minio_restic_tag
+
+Tag for the `restic backup` command
+
+#### Default value
+
+```YAML
+docker_container_minio_restic_tag: '{{ docker_container_minio_name }}'
+```
+
 ### docker_container_minio_volume_dir
 
 Volume mount host directory, where Treafik config files are stored.
@@ -164,6 +282,24 @@ docker_network_minio_name: '{{ docker_container_minio_name }}_backend'
 
 ## Discovered Tags
 
+**_docker-container-backup-all_**\
+&emsp;Backup all containers' volume mounts.
+
+**_docker-container-backup-init-all_**\
+&emsp;Run init backup task for all container.
+
+**_docker-container-backup-init-minio_**\
+&emsp;Run init backup task for minio if restic is enabled.
+
+**_docker-container-backup-list-all_**\
+&emsp;List all containers' backups.
+
+**_docker-container-backup-list-minio_**\
+&emsp;List minio backups.
+
+**_docker-container-backup-minio_**\
+&emsp;Backup minio volume mounts.
+
 **_docker-container-prereq-all_**\
 &emsp;Ensure all pre-requisites are installed
 
@@ -181,6 +317,12 @@ docker_network_minio_name: '{{ docker_container_minio_name }}_backend'
 
 **_docker-container-remove-minio_**\
 &emsp;Remove minio.
+
+**_docker-container-restore-all_**\
+&emsp;Run restic restore for all restic enabled containers.
+
+**_docker-container-restore-minio_**\
+&emsp;Run restic restore for minio if restic is enabled.
 
 **_docker-container-setup-all_**\
 &emsp;Run setup task for all containers.
