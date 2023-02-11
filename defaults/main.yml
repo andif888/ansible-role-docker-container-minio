@@ -74,6 +74,15 @@ docker_container_minio_ports:
   - "9000:9000"
   - "9001:9001"
 
+# @var docker_container_minio_comparisons:description: >
+# Allows to specify how properties of existing containers are compared with module options 
+# to decide whether the container should be recreated / updated or not.
+# @end
+docker_container_minio_comparisons:
+  image: strict
+  env: strict
+  volumes: strict
+
 # docker_container_minio_auto_remove: no 
 docker_container_minio_command: 'server /export --console-address ":9001"'
 # docker_container_minio_detach: yes 
@@ -85,7 +94,6 @@ docker_container_minio_command: 'server /export --console-address ":9001"'
 # docker_container_minio_paused: no 
 # docker_container_minio_privileged: no 
 # docker_container_minio_pull: no
-# docker_container_minio_purge_networks: yes 
 # docker_container_minio_read_only: no 
 # docker_container_minio_recreate: no
 # docker_container_minio_restart: no

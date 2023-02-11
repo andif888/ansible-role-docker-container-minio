@@ -9,6 +9,7 @@
 - name: docker_image pull {{ docker_image_minio_name }}
   community.docker.docker_image:
     name: '{{ docker_image_minio_name }}'
+    force_source: true
     source: pull
     # Select platform for pulling. If not specified, will pull whatever docker prefers.
     pull:
@@ -29,6 +30,7 @@
   community.docker.docker_container:
     command: "{{ docker_container_minio_command | default(omit) }}"
     name: "{{ docker_container_minio_name }}"
+    comparisons: "{{ docker_container_minio_comparisons }}"
     image: "{{ docker_container_minio_image }}"
     state: "{{ docker_container_minio_state | default('started') }}"
     recreate: "{{ docker_container_minio_recreate | default('no') }}"
@@ -52,6 +54,5 @@
     networks_cli_compatible: "{{ docker_container_minio_networks_cli_compatible | default('yes') }}"
     network_mode: "{{ docker_network_minio_name }}"
     pull: "{{ docker_container_minio_pull | default('no') }}"
-    purge_networks: "{{ docker_container_minio_purge_networks | default('yes') }}"
     networks: "{{ docker_container_minio_networks }}"
     published_ports: "{{ docker_container_minio_ports | default(omit) }}"
