@@ -9,12 +9,11 @@
 - name: docker_image pull {{ docker_image_minio_name }}
   community.docker.docker_image:
     name: '{{ docker_image_minio_name }}'
-    force_source: true
     source: pull
     # Select platform for pulling. If not specified, will pull whatever docker prefers.
     pull:
       platform: amd64
-  when: (docker_image_minio_pull is defined) or (docker_image_minio_exist_result.images | length == 0)
+  when: (docker_image_minio_pull) or (docker_image_minio_exist_result.images | length == 0)
 
 - name: docker_network {{ docker_container_minio_name }}
   community.docker.docker_network:

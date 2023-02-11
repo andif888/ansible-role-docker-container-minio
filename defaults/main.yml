@@ -9,7 +9,7 @@
 docker_image_minio_name: "minio/minio:latest"
 
 # @var docker_image_minio_pull:description: Indicate to always pull the docker image.
-docker_image_minio_pull: no
+docker_image_minio_pull: false
 
 # ----------------
 # Docker container
